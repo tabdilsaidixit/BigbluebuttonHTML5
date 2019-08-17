@@ -1,0 +1,39 @@
+@import "/imports/ui/stylesheets/variables/_all";
+
+.help {
+  display: flex;
+  flex-flow: column;
+}
+
+.text {
+  text-align: center;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.backBtn {
+  margin-right: 0.5rem;
+  margin-left: inherit;
+  border: none;
+
+  [dir="rtl"] & {
+    margin-right: inherit;
+    margin-left: 0.5rem;
+  }
+
+  @include mq($small-only) {
+    margin-right: auto;
+    margin-left: inherit;
+
+    [dir="rtl"] & {
+      margin-right: inherit;
+      margin-left: auto;
+    }
+  }
+}
+
+.enterAudio {
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: flex-end;
+}
