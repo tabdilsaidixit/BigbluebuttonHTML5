@@ -1,3 +1,5 @@
+//Added comment to test github working status
+// check if it is added
 import React, { PureComponent } from 'react';
 import { defineMessages } from 'react-intl';
 import PropTypes from 'prop-types';
