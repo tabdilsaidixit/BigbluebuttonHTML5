@@ -1,5 +1,3 @@
-//Added comment to test github working status
-// check if it is added
 import React, { PureComponent } from 'react';
 import { defineMessages } from 'react-intl';
 import PropTypes from 'prop-types';
@@ -17,7 +15,7 @@ import { Session } from 'meteor/session';
 import { styles } from './styles';
 import UserName from '../user-name/component';
 import UserIcons from '../user-icons/component';
-import BreakoutRoom from '/imports/ui/components/actions-bar/create-breakout-room/container';
+import BreakoutRoom from '/imports/ui/components/actions-bar/create-breakout-room-one-one/container';
 import { withModalMounter } from '/imports/ui/components/modal/service';
 
 const messages = defineMessages({
@@ -170,6 +168,9 @@ class UserDropdown extends PureComponent {
     const {
       mountModal,
       isBreakoutRecordable,
+      currentUser, 
+      user,
+
     } = this.props;
 
     return (
@@ -178,6 +179,8 @@ class UserDropdown extends PureComponent {
         {...{
           isBreakoutRecordable,
           isInvitation,
+          currentUser, 
+          user,
         }}
       />,));
   }
