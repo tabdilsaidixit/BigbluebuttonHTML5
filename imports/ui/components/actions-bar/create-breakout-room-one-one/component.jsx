@@ -118,8 +118,8 @@ const propTypes = {
   sendInvitation: PropTypes.func.isRequired,
   mountModal: PropTypes.func.isRequired,
   isBreakoutRecordable: PropTypes.bool.isRequired,
-  //currentUser, 
-  //user,
+  currentUser: PropTypes.object.isRequired, 
+  user: PropTypes.object.isRequired,
 };
 
 class BreakoutRoom extends Component {
@@ -165,6 +165,8 @@ class BreakoutRoom extends Component {
       record: false,
     };
 
+    
+
     this.breakoutFormId = _.uniqueId('breakout-form-');
     this.freeJoinId = _.uniqueId('free-join-check-');
     this.btnLevelId = _.uniqueId('btn-set-level-');
@@ -172,11 +174,14 @@ class BreakoutRoom extends Component {
 
   componentDidMount() {
     const { isInvitation } = this.props;
+
+
     this.setRoomUsers();
     if (isInvitation) {
       this.setInvitationConfig();
     }
-  }
+
+    }
 
   componentDidUpdate(prevProps, prevstate) {
     const { numberOfRooms } = this.state;
@@ -293,6 +298,14 @@ class BreakoutRoom extends Component {
         ...stateUsers,
         ...roomUsers,
       ],
+    }, ()=>{
+    const { currentUser, user  } = this.props;
+    console.log("current user -> ",currentUser );
+    console.log("user -> ", user);
+    this.changeUserRoom(currentUser.id, 1);
+    this.changeUserRoom(user.id, 1);
+    this.onCreateBreakouts();
+
     });
   }
 
@@ -340,6 +353,8 @@ class BreakoutRoom extends Component {
 
   changeUserRoom(userId, room) {
     const { users } = this.state;
+    console.log("Users -> ", users);
+    console.log("User id -> ", userId);
 
     const idxUser = users.findIndex(user => user.userId === userId);
     users[idxUser].room = room;
