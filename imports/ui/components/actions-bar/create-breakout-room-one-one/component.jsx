@@ -299,6 +299,8 @@ class BreakoutRoom extends Component {
         ...roomUsers,
       ],
     }, ()=>{
+      const { getBreakouts } = this.props;
+      var numberOfRooms= getBreakouts().length;
     const { currentUser, user  } = this.props;
     console.log("current user -> ",currentUser );
     console.log("user -> ", user);

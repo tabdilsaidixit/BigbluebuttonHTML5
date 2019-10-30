@@ -67,10 +67,15 @@ const messages = defineMessages({
     id: 'app.userList.menu.makePresenter.label',
     description: 'label to make another user presenter',
   },
+  inviteOneToOneCommunicationLabel: {
+    id: 'app.userList.menu.inviteOneToOneCommunication.label',
+    description: 'label to invite One To One Communication',
+  },
   requestOneToOneCommunicationLabel: {
-    id: 'app.userList.menu.oneToOneCommunication.label',
+    id: 'app.userList.menu.requestOneToOneCommunication.label',
     description: 'label to request One To One Communication',
   },
+  
   createBreakoutRoom: {
     id: 'app.actionsBar.actionsDropdown.createBreakoutRoom',
     description: 'Create breakout room option',
@@ -157,14 +162,43 @@ class UserDropdown extends PureComponent {
     this.makeDropdownItem = this.makeDropdownItem.bind(this);
     this.handleCreateBreakoutRoomClick = this.handleCreateBreakoutRoomClick.bind(this);
     this.onCreateBreakouts = this.onCreateBreakouts.bind(this);
+    this.onRequestBreakouts = this.onRequestBreakouts.bind(this);
+    this.checkIfClickedUserIsSameUser = this.checkIfClickedUserIsSameUser.bind(this);
+  }
+
+  checkIfClickedUserIsSameUser(){
+    const {
+      currentUser, 
+      user,
+
+    } = this.props;
+    return user.id==currentUser.id;
+  }
+
+
+
+
+
+  onRequestBreakouts() {
+    return this.handleRequestBreakoutRoomClick(true);
   }
 
   onCreateBreakouts() {
     return this.handleCreateBreakoutRoomClick(false);
   }
   
-  handleCreateBreakoutRoomClick(isInvitation) {
+  handleRequestBreakoutRoomClick(isInvitation) {
     console.log(JSON.stringify(this.props));
+    const {
+      currentUser, 
+      user,
+
+    } = this.props;
+
+    console.log(currentUser.name + " requested meeting with "+ user.name);
+  }
+  handleCreateBreakoutRoomClick(isInvitation) {
+    //console.log(JSON.stringify(this.props));
     const {
       mountModal,
       isBreakoutRecordable,
@@ -264,7 +298,11 @@ class UserDropdown extends PureComponent {
     const canCreateBreakout = isUserModerator
       && !meetingIsBreakout
       && !hasBreakoutRoom
-      && isBreakoutEnabled;
+      && isBreakoutEnabled && (currentUser.id!=user.id);
+
+    const canRequestBreakout = !meetingIsBreakout
+      && !hasBreakoutRoom
+      && isBreakoutEnabled && (currentUser.id!=user.id);
 
 
     const { showNestedOptions } = this.state;
@@ -320,15 +358,31 @@ class UserDropdown extends PureComponent {
     }
 
     if(canCreateBreakout){
-      actions.push(<DropdownListSeparator key={_.uniqueId('list-separator-')} />);
+      
       actions.push(this.makeDropdownItem(
-        this.createBreakoutId,
-        intl.formatMessage(messages.createBreakoutRoom),
+        'createbreakoutroom',
+        intl.formatMessage(messages.inviteOneToOneCommunicationLabel),
         () => {
           this.onCreateBreakouts();
         },
-        'rooms' 
+        'createrooms' 
       ));
+
+    }
+
+
+    if(canRequestBreakout){
+      
+      actions.push(this.makeDropdownItem(
+        'requestbreakoutroom' ,
+        intl.formatMessage(messages.requestOneToOneCommunicationLabel),
+        () => {
+          this.onRequestBreakouts();
+        },
+        'requestrooms' 
+      ));
+
+      //actions.push(<DropdownListSeparator key={_.uniqueId('list-separator-')} />);
     }
 
     if (allowedToChangeStatus) {
@@ -386,7 +440,7 @@ class UserDropdown extends PureComponent {
     if (allowedToRequestOneToOneCommunication) {
       actions.push(this.makeDropdownItem(
         '',
-        intl.formatMessage(messages.requestOneToOneCommunicationLabel),
+        intl.formatMessage(messages.inviteOneToOneCommunicationLabel),
         () => this.onActionsHide(removeUser(user.id)),
         '',
       ));
