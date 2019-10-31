@@ -408,13 +408,13 @@ class UserDropdown extends PureComponent {
     }
 
     if (allowedToChangeStatus) {
-      actions.push(this.makeDropdownItem(
-        'setstatus',
-        intl.formatMessage(messages.statusTriggerLabel),
-        () => this.setState({ showNestedOptions: true, isActionsOpen: true }),
-        'user',
-        'right_arrow',
-      ));
+      // actions.push(this.makeDropdownItem(
+      //   'setstatus',
+      //   intl.formatMessage(messages.statusTriggerLabel),
+      //   () => this.setState({ showNestedOptions: true, isActionsOpen: true }),
+      //   'user',
+      //   'right_arrow',
+      // ));
     }
 
     if (enablePrivateChat) {
@@ -431,12 +431,12 @@ class UserDropdown extends PureComponent {
     }
 
     if (allowedToResetStatus && user.emoji.status !== 'none') {
-      actions.push(this.makeDropdownItem(
-        'clearStatus',
-        intl.formatMessage(messages.ClearStatusLabel),
-        () => this.onActionsHide(setEmojiStatus(user.id, 'none')),
-        'clear_status',
-      ));
+      // actions.push(this.makeDropdownItem(
+      //   'clearStatus',
+      //   intl.formatMessage(messages.ClearStatusLabel),
+      //   () => this.onActionsHide(setEmojiStatus(user.id, 'none')),
+      //   'clear_status',
+      // ));
     }
 
    /* 

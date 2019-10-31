@@ -527,9 +527,19 @@ export default {
     let len = allUsers.length;
     for(var i=0; i<len; i++){
       if(allUsers[i].emoji == "raiseHand"){
-        waitingUsers.push(allUsers[i].userId);
+        waitingUsers.push(allUsers[i]);
       }
     }
-    return waitingUsers;
+
+    waitingUsers.sort((a,b)=>(a.emojiTime>b.emojiTime)?1:-1);
+
+
+    var waitingUsersIds = [];
+    let waitLen = waitingUsers.length;
+    for(var i=0; i<waitLen; i++){
+        waitingUsersIds.push(waitingUsers[i].userId);
+    }
+
+    return waitingUsersIds;
   },
 };
