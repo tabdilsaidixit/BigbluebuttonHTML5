@@ -26,6 +26,56 @@ const takePresenterRole = () => makeCall('assignPresenter', Auth.userID);
 export default {
   isUserPresenter: () => Users.findOne({ userId: Auth.userID }).presenter,
   isUserModerator: () => Users.findOne({ userId: Auth.userID }).role === ROLE_MODERATOR,
+  isUserInWaitingList:  (id) => {
+    console.log(id);
+    const u = Users.findOne({ userId: id });
+    console.log("====");
+    console.log("object...");
+    console.log(u);
+    if(u){
+      console.log(u.emoji);
+     
+        if(u.emoji == "raiseHand"){
+          console.log("true");
+          return true;
+        }
+        else{
+          console.log("not raisehand false");
+          return false;
+        }
+      
+    }
+    else{
+      console.log("object not present false");
+      return false;
+    }
+  }, 
+  getUsersInWaitingList: () => {
+    const allUsers = Users.find().fetch();
+    var waitingUsers = [];
+    console.log(allUsers);
+
+    let len = allUsers.length;
+    for(var i=0; i<len; i++){
+      if(allUsers[i].emoji == "raiseHand"){
+        waitingUsers.push(allUsers[i].userId);
+      }
+    }
+    return waitingUsers;
+  },
+  getUsersInWaitingListFull: () => {
+    const allUsers = Users.find().fetch();
+    var waitingUsers = [];
+    console.log(allUsers);
+
+    let len = allUsers.length;
+    for(var i=0; i<len; i++){
+      if(allUsers[i].emoji == "raiseHand"){
+        waitingUsers.push(allUsers[i]);
+      }
+    }
+    return waitingUsers;
+  },
   recordSettingsList: () => Meetings.findOne({ meetingId: Auth.meetingID }).recordProp,
   meetingIsBreakout: () => Meetings.findOne({ meetingId: Auth.meetingID }).meetingProp.isBreakout,
   meetingName: () => Meetings.findOne({ meetingId: Auth.meetingID }).meetingProp.name,

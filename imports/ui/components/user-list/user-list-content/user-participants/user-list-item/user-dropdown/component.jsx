@@ -71,6 +71,11 @@ const messages = defineMessages({
     id: 'app.userList.menu.inviteOneToOneCommunication.label',
     description: 'label to invite One To One Communication',
   },
+  removeFromWaitingListLabel: {
+    id: 'app.userList.menu.resetEmojiStatus.label',
+    description: 'label to remove from waiting list',
+  },
+  
   requestOneToOneCommunicationLabel: {
     id: 'app.userList.menu.requestOneToOneCommunication.label',
     description: 'label to request One To One Communication',
@@ -126,6 +131,7 @@ const propTypes = {
   getScrollContainerRef: PropTypes.func.isRequired,
   toggleUserLock: PropTypes.func.isRequired,
   mountModal:  PropTypes.func.isRequired,
+  isGivenUserModerator:  PropTypes.func.isRequired,
 };
 
 class UserDropdown extends PureComponent {
@@ -190,10 +196,12 @@ class UserDropdown extends PureComponent {
   handleRequestBreakoutRoomClick(isInvitation) {
     console.log(JSON.stringify(this.props));
     const {
-      currentUser, 
+      setEmojiStatus,
       user,
-
+      currentUser, 
     } = this.props;
+
+    setEmojiStatus('raiseHand');
 
     console.log(currentUser.name + " requested meeting with "+ user.name);
   }
@@ -293,6 +301,7 @@ class UserDropdown extends PureComponent {
       meetingIsBreakout,
       hasBreakoutRoom,
       isBreakoutEnabled,
+      isGivenUserModerator,
     } =  this.props;
 
     const canCreateBreakout = isUserModerator
@@ -302,7 +311,7 @@ class UserDropdown extends PureComponent {
 
     const canRequestBreakout = !meetingIsBreakout
       && !hasBreakoutRoom
-      && isBreakoutEnabled && (currentUser.id!=user.id);
+      && isBreakoutEnabled && (currentUser.id!=user.id) ;
 
 
     const { showNestedOptions } = this.state;
@@ -368,21 +377,34 @@ class UserDropdown extends PureComponent {
         'createrooms' 
       ));
 
+      actions.push(this.makeDropdownItem(
+        'createSetEmojiStatus',
+        intl.formatMessage(messages.removeFromWaitingListLabel),
+        () => {
+          const {
+            user, 
+          } = this.props;
+          setEmojiStatus(user.id, 'none')
+        },
+        'createSetEmojiStatus' 
+      ));
     }
 
 
     if(canRequestBreakout){
-      
-      actions.push(this.makeDropdownItem(
-        'requestbreakoutroom' ,
-        intl.formatMessage(messages.requestOneToOneCommunicationLabel),
-        () => {
-          this.onRequestBreakouts();
-        },
-        'requestrooms' 
-      ));
 
-      //actions.push(<DropdownListSeparator key={_.uniqueId('list-separator-')} />);
+      if(isGivenUserModerator(user.id))
+      {
+        actions.push(this.makeDropdownItem(
+          'requestbreakoutroom' ,
+          intl.formatMessage(messages.requestOneToOneCommunicationLabel),
+          () => {
+            this.onRequestBreakouts();
+          },
+          'requestrooms' 
+        ));
+
+      } 
     }
 
     if (allowedToChangeStatus) {

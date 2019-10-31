@@ -26,6 +26,7 @@ const propTypes = {
   getGroupChatPrivate: PropTypes.func.isRequired,
   toggleUserLock: PropTypes.func.isRequired,
   requestUserInformation: PropTypes.func.isRequired,
+  getUsersInWaitingList: PropTypes.func.isRequired,
 };
 
 const UserListContainer = props => <UserList {...props} />;
@@ -35,6 +36,7 @@ UserListContainer.propTypes = propTypes;
 export default withTracker(({ chatID, compact }) => ({
   hasBreakoutRoom: Service.hasBreakoutRoom(),
   getUsersId: Service.getUsersId,
+  getUsersInWaitingList: Service.getUsersInWaitingList,
   currentUser: Service.getCurrentUser(),
   activeChats: Service.getActiveChats(chatID),
   isBreakoutRoom: meetingIsBreakout(),

@@ -18,6 +18,7 @@ const propTypes = {
   normalizeEmojiName: PropTypes.func.isRequired,
   getScrollContainerRef: PropTypes.func.isRequired,
   toggleUserLock: PropTypes.func.isRequired,
+  isGivenUserModerator: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -54,6 +55,7 @@ class UserListItem extends PureComponent {
       meetignIsBreakout,
       isBreakoutRecordable,
       isUserModerator,
+      isGivenUserModerator,
       meetingIsBreakout,
       hasBreakoutRoom,
       isBreakoutEnabled,
@@ -92,6 +94,7 @@ class UserListItem extends PureComponent {
           meetignIsBreakout,
           isBreakoutRecordable,
           isUserModerator,
+          isGivenUserModerator,
           meetingIsBreakout,
           hasBreakoutRoom,
           isBreakoutEnabled,

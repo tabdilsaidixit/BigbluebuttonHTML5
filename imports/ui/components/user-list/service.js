@@ -178,6 +178,22 @@ const userFindSorting = {
   userId: 1,
 };
 
+
+
+const getWaitingUsers = (id) => {
+  const users = Users
+    .find({
+      _id:id,
+      meetingId: Auth.meetingID,
+      connectionStatus: 'online',
+    }, userFindSorting)
+    .fetch();
+
+  return users
+    .map(mapUser)
+    .sort(sortUsers);
+};
+
 const getUsers = () => {
   const users = Users
     .find({
@@ -362,6 +378,7 @@ const normalizeEmojiName = emoji => (
 );
 
 const setEmojiStatus = (data) => {
+  console.log(data);
   const statusAvailable = (Object.keys(EMOJI_STATUSES).includes(data));
 
   return statusAvailable
@@ -462,6 +479,7 @@ const getGroupChatPrivate = (sender, receiver) => {
 };
 
 const isUserModerator = (userId) => {
+  console.log(userId);
   const u = Users.findOne({ userId });
   return u ? u.moderator : false;
 };
@@ -501,4 +519,17 @@ export default {
   hasPrivateChatBetweenUsers,
   toggleUserLock,
   requestUserInformation,
+  getUsersInWaitingList: () => {
+    const allUsers = Users.find().fetch();
+    var waitingUsers = [];
+    console.log(allUsers);
+
+    let len = allUsers.length;
+    for(var i=0; i<len; i++){
+      if(allUsers[i].emoji == "raiseHand"){
+        waitingUsers.push(allUsers[i].userId);
+      }
+    }
+    return waitingUsers;
+  },
 };
