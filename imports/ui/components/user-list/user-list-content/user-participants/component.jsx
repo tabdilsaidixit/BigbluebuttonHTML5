@@ -17,10 +17,12 @@ const propTypes = {
   meeting: PropTypes.shape({}).isRequired,
   users: PropTypes.arrayOf(PropTypes.string).isRequired,
   waitingUsers:  PropTypes.arrayOf(PropTypes.string).isRequired,
+  tutors:  PropTypes.arrayOf(PropTypes.string).isRequired,
   getGroupChatPrivate: PropTypes.func.isRequired,
   handleEmojiChange: PropTypes.func.isRequired,
   getUsersId: PropTypes.func.isRequired,
   getUsersInWaitingList:PropTypes.func.isRequired,
+  getTutorsList: PropTypes.func.isRequired,
   isBreakoutRoom: PropTypes.bool,
   setEmojiStatus: PropTypes.func.isRequired,
   assignPresenter: PropTypes.func.isRequired,
@@ -36,7 +38,6 @@ const propTypes = {
   toggleUserLock: PropTypes.func.isRequired,
   requestUserInformation: PropTypes.func.isRequired,
   isUserInWaitingList: PropTypes.func.isRequired,
-  getUsersInWaitingList: PropTypes.func.isRequired,
   getUsersInWaitingListFull:  PropTypes.func.isRequired,
 };
 
@@ -63,6 +64,10 @@ const intlMessages = defineMessages({
     id: 'app.userList.waitingListUsersTitle',
     description: 'Title for the Waiting list Header',
   },
+  tutorsTitle: {
+    id: 'app.userList.turorsTitle',
+    description: 'Title for the tutors list',
+  },  
 });
 
 class UserParticipants extends Component {
@@ -81,7 +86,7 @@ class UserParticipants extends Component {
     this.changeState = this.changeState.bind(this);
     this.getUsers = this.getUsers.bind(this);
     this.getWaitingListUsers = this.getWaitingListUsers.bind(this);
-    this.countOfWaitingListUsers = this.countOfWaitingListUsers.bind(this);
+    this.getTutors = this.getTutors.bind(this);
   }
 
   componentDidMount() {
@@ -119,13 +124,72 @@ class UserParticipants extends Component {
     return this.refScrollContainer;
   }
 
-  countOfWaitingListUsers(){
+  getTutors() {
     const {
-      // getUsersInWaitingList,
-      // getUsersInWaitingListFull,
-      waitingUsers,
+      compact,
+      isBreakoutRoom,
+      currentUser,
+      meeting,
+      getAvailableActions,
+      normalizeEmojiName,
+      isMeetingLocked,
+      changeRole,
+      assignPresenter,
+      setEmojiStatus,
+      removeUser,
+      toggleVoice,
+      getGroupChatPrivate,
+      handleEmojiChange,
+      getEmojiList,
+      getEmoji,
+      tutors,
+      hasPrivateChatBetweenUsers,
+      toggleUserLock,
+      requestUserInformation,
     } = this.props;
-    return waitingUsers.length;
+
+    let index = -1;
+    
+    return tutors.map(u => (
+      <CSSTransition
+        classNames={listTransition}
+        appear
+        enter
+        exit
+        timeout={0}
+        component="div"
+        className={cx(styles.participantsList)}
+        key={u}
+      >
+        <div ref={(node) => { this.userRefs[index += 1] = node; }}>
+          <UserListItemContainer
+            {...{
+              currentUser,
+              compact,
+              isBreakoutRoom,
+              meeting,
+              getAvailableActions,
+              normalizeEmojiName,
+              isMeetingLocked,
+              handleEmojiChange,
+              getEmojiList,
+              getEmoji,
+              setEmojiStatus,
+              assignPresenter,
+              removeUser,
+              toggleVoice,
+              changeRole,
+              getGroupChatPrivate,
+              hasPrivateChatBetweenUsers,
+              toggleUserLock,
+              requestUserInformation,
+            }}
+            userId={u}
+            getScrollContainerRef={this.getScrollContainerRef}
+          />
+        </div>
+      </CSSTransition>
+    ));
   }
 
   getWaitingListUsers() {
@@ -146,22 +210,14 @@ class UserParticipants extends Component {
       handleEmojiChange,
       getEmojiList,
       getEmoji,
-      users,
       waitingUsers,
       hasPrivateChatBetweenUsers,
       toggleUserLock,
       requestUserInformation,
-      isUserInWaitingList,
-      getUsersInWaitingList,
-      getUsersInWaitingListFull,
     } = this.props;
 
     let index = -1;
     
-    //let dummy = getUsersInWaitingListFull();
-    //let waitingUsers = getUsersInWaitingList();
-
-
     return waitingUsers.map(u => (
       <CSSTransition
         classNames={listTransition}
@@ -297,6 +353,7 @@ class UserParticipants extends Component {
       muteAllExceptPresenter,
       currentUser,
       waitingUsers,
+      tutors,
     } = this.props;
 
     return (
@@ -334,20 +391,30 @@ class UserParticipants extends Component {
         >
           <div className={styles.list}>
             <TransitionGroup ref={(ref) => { this.refScrollItems = ref; }}>
-            <h2 className={styles.smallTitle}>
-                  {intl.formatMessage(intlMessages.waitingUsersTitle)}
-                  &nbsp;(
-                  { waitingUsers.length}
-                  )
-                </h2>
+              <h2 className={styles.smallTitle}>
+                {intl.formatMessage(intlMessages.tutorsTitle)}
+                &nbsp;(
+                { tutors.length}
+                )
+              </h2>
+
+              {this.getTutors()}
+
+
+              <h2 className={styles.smallTitle}>
+                {intl.formatMessage(intlMessages.waitingUsersTitle)}
+                &nbsp;(
+                { waitingUsers.length}
+                )
+              </h2>
 
               {this.getWaitingListUsers()}
 
               <h2 className={styles.smallTitle}>
-                  {intl.formatMessage(intlMessages.usersTitle)}
-                  &nbsp;(
-                  {users.length}
-                  )
+                {intl.formatMessage(intlMessages.usersTitle)}
+                &nbsp;(
+                {users.length}
+                )
                 </h2>
               {this.getUsers()}
               

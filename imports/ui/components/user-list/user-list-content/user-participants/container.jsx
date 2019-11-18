@@ -6,11 +6,12 @@ import Service from '/imports/ui/components/actions-bar/service';
 
 const UserParticipantsContainer = props => <UserParticipants {...props} />;
 
-export default withTracker(({ getUsersId, getUsersInWaitingList }) => ({
+export default withTracker(({ getUsersId, getUsersInWaitingList, getTutorsList }) => ({
   isUserInWaitingList: Service.isUserInWaitingList,
   getUsersInWaitingList: Service.getUsersInWaitingList,
   getUsersInWaitingListFull: Service.getUsersInWaitingListFull,
   meeting: Meetings.findOne({}),
   users: getUsersId(),
   waitingUsers: getUsersInWaitingList(), 
+  tutors: getTutorsList(),
 }))(UserParticipantsContainer);

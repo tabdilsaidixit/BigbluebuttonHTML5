@@ -542,4 +542,19 @@ export default {
 
     return waitingUsersIds;
   },
+
+  getTutorsList: () => {
+    const allUsers = Users.find().fetch();
+    var tutorsList = [];
+    console.log(allUsers);
+
+    let len = allUsers.length;
+    for(var i=0; i<len; i++){
+      if(allUsers[i].moderator){
+        tutorsList.push(allUsers[i].userId);
+      }
+    }
+
+    return tutorsList;
+  },
 };
